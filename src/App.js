@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Profile from "./Profile";
+import Profile from "./Profile/Profile";
+import Home from "./Home/Home";
 
 const App = () => {
   return (
     <Router>
-      <Route path="/" component={Home} />
-      <Route path="/profile/:nickname" component={Profile} />
+      <Route exact path="/" component={Home} />
+      <Route exact path="/profile/:nickname" component={Profile} />
     </Router>
   );
 };
