@@ -31,17 +31,24 @@ const Match = ({ matchData }) => {
   return (
     <S.MainDiv>
       {matchIn.map((match, i) => {
+        let penaltyShootOut = false;
         console.log(match);
         const firstIsWin = match.matchInfo[0].matchDetail.matchResult === "승";
         console.log(firstIsWin);
         const result = match.matchInfo[0].matchDetail.matchResult === "무";
+        if (!result) {
+          if (
+            match.matchInfo[0].shoot.goalTotal ==
+            match.matchInfo[1].shoot.goalTotal
+          )
+            penaltyShootOut = true;
+        }
         return (
           <S.List ref={inputRef}>
             <S.FirstPlayer>
-              <div>{firstIsWin ? "승" : result ? "무" : "패"}</div>
+              <div>{result ? "무" : "승"}</div>
               <div></div>
               <div>
-                {console.log(match.matchInfo[0].shoot.goalTotal)}
                 {firstIsWin
                   ? match.matchInfo[0].nickname
                   : match.matchInfo[1].nickname}
@@ -51,9 +58,29 @@ const Match = ({ matchData }) => {
                   ? match.matchInfo[0].shoot.goalTotal
                   : match.matchInfo[1].shoot.goalTotal}
               </div>
+              {penaltyShootOut && (
+                <div>
+                  (
+                  {penaltyShootOut &&
+                    (firstIsWin
+                      ? match.matchInfo[0].shoot.shootOutScore
+                      : match.matchInfo[1].shoot.shootOutScore)}
+                  )
+                </div>
+              )}
             </S.FirstPlayer>
             <S.Vs> vs </S.Vs>
             <S.SecondPlayer>
+              {penaltyShootOut && (
+                <div>
+                  (
+                  {penaltyShootOut &&
+                    (!firstIsWin
+                      ? match.matchInfo[0].shoot.shootOutScore
+                      : match.matchInfo[1].shoot.shootOutScore)}
+                  )
+                </div>
+              )}
               <div>
                 {!firstIsWin
                   ? match.matchInfo[0].shoot.goalTotal
@@ -64,7 +91,7 @@ const Match = ({ matchData }) => {
                   ? match.matchInfo[0].nickname
                   : match.matchInfo[1].nickname}
               </div>
-              <div>{result ? "무" : !firstIsWin ? "승" : "패"}</div>
+              <div>{result ? "무" : "패"}</div>
             </S.SecondPlayer>
             <div>{match.matchDate}</div>
             <button
