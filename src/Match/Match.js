@@ -39,14 +39,26 @@ const Match = ({ matchData }) => {
           <S.List ref={inputRef}>
             <S.FirstPlayer>
               <div>{firstIsWin ? "승" : result ? "무" : "패"}</div>
+              <div></div>
               <div>
+                {console.log(match.matchInfo[0].shoot.goalTotal)}
                 {firstIsWin
                   ? match.matchInfo[0].nickname
                   : match.matchInfo[1].nickname}
               </div>
+              <div>
+                {firstIsWin
+                  ? match.matchInfo[0].shoot.goalTotal
+                  : match.matchInfo[1].shoot.goalTotal}
+              </div>
             </S.FirstPlayer>
             <S.Vs> vs </S.Vs>
             <S.SecondPlayer>
+              <div>
+                {!firstIsWin
+                  ? match.matchInfo[0].shoot.goalTotal
+                  : match.matchInfo[1].shoot.goalTotal}
+              </div>
               <div>
                 {!firstIsWin
                   ? match.matchInfo[0].nickname
