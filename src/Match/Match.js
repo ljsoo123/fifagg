@@ -18,7 +18,7 @@ const Match = ({ matchData }) => {
     );
     Promise.all(data).then((data) => {
       const gameData = data.map((res) => res.data);
-      gameData.sort((a, b) => new Date(a.matchDate) - new Date(b.matchDate));
+      gameData.sort((a, b) => new Date(b.matchDate) - new Date(a.matchDate));
       setMatchIn(gameData);
     });
   }, []);
@@ -93,7 +93,13 @@ const Match = ({ matchData }) => {
               </div>
               <div>{result ? "무" : "패"}</div>
             </S.SecondPlayer>
-            <div>{match.matchDate}</div>
+            <div>
+              {match.matchDate.split("-")[0] +
+                "-" +
+                match.matchDate.split("-")[1] +
+                "-" +
+                match.matchDate.split("-")[2].substr(0, 2)}
+            </div>
             <button
               onClick={() => {
                 onBtnClick(i);
@@ -104,7 +110,6 @@ const Match = ({ matchData }) => {
           </S.List>
         );
       })}
-      {<div>{matchIn.matchInfo}</div>}
     </S.MainDiv>
   );
 };
