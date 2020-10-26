@@ -25,7 +25,7 @@ const Player = ({ player }) => {
       <S.Global />
       <S.Nickname>{player.nickname}</S.Nickname>
       <S.Level>Lv.{player.level}</S.Level>
-      {matchData && <Match matchData={matchData} />}
+      {matchData && <Match matchData={matchData} player={player} />}
     </S.Main>
   );
 };
