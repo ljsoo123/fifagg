@@ -34,3 +34,9 @@ export const List = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const Inf = styled.div`
+  width: 0;
+  height: 0;
+  display: none;
+`;
