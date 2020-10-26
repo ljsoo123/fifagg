@@ -2,7 +2,9 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import * as S from "./styles";
-const Match = ({ matchData }) => {
+import Information from "../Information/Information";
+const Match = ({ matchData, player }) => {
+  console.log(player);
   let history = useHistory();
   const inputRef = useRef(null);
   const [matchIn, setMatchIn] = useState([]);
@@ -24,7 +26,7 @@ const Match = ({ matchData }) => {
   }, []);
   const onBtnClick = useCallback(
     (index) => {
-      console.log(matchIn[index]);
+      history.push(`/profile/${player.nickname}/information${index}`);
     },
     [matchIn]
   );
@@ -32,9 +34,7 @@ const Match = ({ matchData }) => {
     <S.MainDiv>
       {matchIn.map((match, i) => {
         let penaltyShootOut = false;
-        console.log(match);
         const firstIsWin = match.matchInfo[0].matchDetail.matchResult === "승";
-        console.log(firstIsWin);
         const result = match.matchInfo[0].matchDetail.matchResult === "무";
         if (!result) {
           if (
@@ -110,6 +110,9 @@ const Match = ({ matchData }) => {
           </S.List>
         );
       })}
+      <S.Inf>
+        <Information matchIn={matchIn} />
+      </S.Inf>
     </S.MainDiv>
   );
 };
