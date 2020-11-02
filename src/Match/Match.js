@@ -2,12 +2,14 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import * as S from "./styles";
-import Information from "../Information/Information";
+
 const Match = ({ matchData, player }) => {
   console.log(player);
   let history = useHistory();
   const inputRef = useRef(null);
+  const [modal, setModal] = useState(false);
   const [matchIn, setMatchIn] = useState([]);
+  const [matchIndex, setMatchIndex] = useState();
   matchData = matchData[0];
   useEffect(() => {
     const data = matchData.map((gameId) =>
@@ -24,96 +26,97 @@ const Match = ({ matchData, player }) => {
       setMatchIn(gameData);
     });
   }, []);
-  const onBtnClick = useCallback(
-    (index) => {
-      history.push(`/profile/${player.nickname}/information${index}`);
-    },
-    [matchIn]
-  );
+  const onBtnClick = useCallback((index) => {
+    setModal(!modal);
+    console.log(modal);
+    console.log(matchIn[index]);
+    setMatchIndex(matchIn[index]);
+    console.log(matchIndex);
+  });
   return (
-    <S.MainDiv>
-      {matchIn.map((match, i) => {
-        let penaltyShootOut = false;
-        const firstIsWin = match.matchInfo[0].matchDetail.matchResult === "승";
-        const result = match.matchInfo[0].matchDetail.matchResult === "무";
-        if (!result) {
-          if (
-            match.matchInfo[0].shoot.goalTotal ==
-            match.matchInfo[1].shoot.goalTotal
-          )
-            penaltyShootOut = true;
-        }
-        return (
-          <S.List ref={inputRef}>
-            <S.FirstPlayer>
-              <div>{result ? "무" : "승"}</div>
-              <div></div>
-              <div>
-                {firstIsWin
-                  ? match.matchInfo[0].nickname
-                  : match.matchInfo[1].nickname}
-              </div>
-              <div>
-                {firstIsWin
-                  ? match.matchInfo[0].shoot.goalTotal
-                  : match.matchInfo[1].shoot.goalTotal}
-              </div>
-              {penaltyShootOut && (
+    <>
+      <S.MainDiv>
+        {matchIn.map((match, i) => {
+          let penaltyShootOut = false;
+          const firstIsWin =
+            match.matchInfo[0].matchDetail.matchResult === "승";
+          const result = match.matchInfo[0].matchDetail.matchResult === "무";
+          if (!result) {
+            if (
+              match.matchInfo[0].shoot.goalTotalDisplay ==
+              match.matchInfo[1].shoot.goalTotalDisplay
+            )
+              penaltyShootOut = true;
+          }
+          return (
+            <S.List ref={inputRef}>
+              <S.FirstPlayer>
+                <div>{result ? "무" : "승"}</div>
+                <div></div>
                 <div>
-                  (
-                  {penaltyShootOut &&
-                    (firstIsWin
-                      ? match.matchInfo[0].shoot.shootOutScore
-                      : match.matchInfo[1].shoot.shootOutScore)}
-                  )
+                  {firstIsWin
+                    ? match.matchInfo[0].nickname
+                    : match.matchInfo[1].nickname}
                 </div>
-              )}
-            </S.FirstPlayer>
-            <S.Vs> vs </S.Vs>
-            <S.SecondPlayer>
-              {penaltyShootOut && (
                 <div>
-                  (
-                  {penaltyShootOut &&
-                    (!firstIsWin
-                      ? match.matchInfo[0].shoot.shootOutScore
-                      : match.matchInfo[1].shoot.shootOutScore)}
-                  )
+                  {firstIsWin
+                    ? match.matchInfo[0].shoot.goalTotalDisplay
+                    : match.matchInfo[1].shoot.goalTotalDisplay}
                 </div>
-              )}
+                {penaltyShootOut && (
+                  <div>
+                    (
+                    {penaltyShootOut &&
+                      (firstIsWin
+                        ? match.matchInfo[0].shoot.shootOutScore
+                        : match.matchInfo[1].shoot.shootOutScore)}
+                    )
+                  </div>
+                )}
+              </S.FirstPlayer>
+              <S.Vs> vs </S.Vs>
+              <S.SecondPlayer>
+                {penaltyShootOut && (
+                  <div>
+                    (
+                    {penaltyShootOut &&
+                      (!firstIsWin
+                        ? match.matchInfo[0].shoot.shootOutScore
+                        : match.matchInfo[1].shoot.shootOutScore)}
+                    )
+                  </div>
+                )}
+                <div>
+                  {!firstIsWin
+                    ? match.matchInfo[0].shoot.goalTotalDisplay
+                    : match.matchInfo[1].shoot.goalTotalDisplay}
+                </div>
+                <div>
+                  {!firstIsWin
+                    ? match.matchInfo[0].nickname
+                    : match.matchInfo[1].nickname}
+                </div>
+                <div>{result ? "무" : "패"}</div>
+              </S.SecondPlayer>
               <div>
-                {!firstIsWin
-                  ? match.matchInfo[0].shoot.goalTotal
-                  : match.matchInfo[1].shoot.goalTotal}
+                {match.matchDate.split("-")[0] +
+                  "-" +
+                  match.matchDate.split("-")[1] +
+                  "-" +
+                  match.matchDate.split("-")[2].substr(0, 2)}
               </div>
-              <div>
-                {!firstIsWin
-                  ? match.matchInfo[0].nickname
-                  : match.matchInfo[1].nickname}
-              </div>
-              <div>{result ? "무" : "패"}</div>
-            </S.SecondPlayer>
-            <div>
-              {match.matchDate.split("-")[0] +
-                "-" +
-                match.matchDate.split("-")[1] +
-                "-" +
-                match.matchDate.split("-")[2].substr(0, 2)}
-            </div>
-            <button
-              onClick={() => {
-                onBtnClick(i);
-              }}
-            >
-              상세정보
-            </button>
-          </S.List>
-        );
-      })}
-      <S.Inf>
-        <Information matchIn={matchIn} />
-      </S.Inf>
-    </S.MainDiv>
+              <button
+                onClick={() => {
+                  onBtnClick(i);
+                }}
+              >
+                상세정보
+              </button>
+            </S.List>
+          );
+        })}
+      </S.MainDiv>
+    </>
   );
 };
 
